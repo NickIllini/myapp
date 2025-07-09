@@ -1,49 +1,64 @@
-# Welcome to your Convex + React (Vite) + Clerkapp
+# Interactive Map App
 
-This is a [Convex](https://convex.dev/) project created with [`npm create convex`](https://www.npmjs.com/package/create-convex).
+A modern, feature-rich map application built with React, TypeScript, and Leaflet.
 
-After the initial setup (<2 minutes) you'll have a working full-stack app using:
+## Features
 
-- Convex as your backend (database, server logic)
-- [React](https://react.dev/) as your frontend (web page interactivity)
-- [Vite](https://vitest.dev/) for optimized web hosting
-- [Tailwind](https://tailwindcss.com/) for building great looking accessible UI
-- [Clerk](https://clerk.com/) for authentication
+- **Interactive Map**: Built with Leaflet and OpenStreetMap tiles
+- **Location Search**: Search for any location worldwide using the search box
+- **Current Location**: Get your current GPS location with one click
+- **Custom Markers**: Click anywhere on the map to add custom markers
+- **Multiple Marker Types**: 
+  - 🔴 Red markers for search results
+  - 🟢 Green markers for current location
+  - 🔵 Blue markers for custom locations
+- **Responsive Design**: Works on desktop and mobile devices
+- **Modern UI**: Built with Tailwind CSS
 
-## Get started
+## How to Use
 
-If you just cloned this codebase and didn't use `npm create convex`, run:
+1. **Search for locations**: Use the search box in the top-left to find any location
+2. **Add custom markers**: Click anywhere on the map to place a marker
+3. **Find your location**: Click the 📍 button to get your current GPS location
+4. **Clear markers**: Click the 🗑️ button to remove all markers
+5. **View details**: Click on any marker to see location details
 
-```
+## Tech Stack
+
+- **React 19** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **Leaflet** - Interactive maps
+- **React Leaflet** - React integration for Leaflet
+- **OpenStreetMap** - Map tiles
+- **Nominatim API** - Geocoding service
+
+## Development
+
+```bash
+# Install dependencies
 npm install
+
+# Start development server
 npm run dev
+
+# Build for production
+npm run build
 ```
 
-If you're reading this README on GitHub and want to use this template, run:
+## API Usage
 
-```
-npm create convex@latest -- -t react-vite-clerk
-```
+This app uses free and open-source services:
+- **OpenStreetMap** for map tiles
+- **Nominatim** for geocoding (search functionality)
+- **Browser Geolocation API** for current location
 
-Then:
+No API keys required!
 
-1. Follow steps 1 to 3 in the [Clerk onboarding guide](https://docs.convex.dev/auth/clerk#get-started)
-2. Paste the Issuer URL as `CLERK_JWT_ISSUER_DOMAIN` to your dev deployment environment variable settings on the Convex dashboard (see [docs](https://docs.convex.dev/auth/clerk#configuring-dev-and-prod-instances))
-3. Paste your publishable key as `VITE_CLERK_PUBLISHABLE_KEY="<your publishable key>"` to the `.env.local` file in this directory.
+## Browser Compatibility
 
-If you want to sync Clerk user data via webhooks, check out this [example repo](https://github.com/thomasballinger/convex-clerk-users-table/).
-
-## Learn more
-
-To learn more about developing your project with Convex, check out:
-
-- The [Tour of Convex](https://docs.convex.dev/get-started) for a thorough introduction to Convex principles.
-- The rest of [Convex docs](https://docs.convex.dev/) to learn about all Convex features.
-- [Stack](https://stack.convex.dev/) for in-depth articles on advanced topics.
-
-## Join the community
-
-Join thousands of developers building full-stack apps with Convex:
-
-- Join the [Convex Discord community](https://convex.dev/community) to get help in real-time.
-- Follow [Convex on GitHub](https://github.com/get-convex/), star and contribute to the open-source implementation of Convex.
+- Modern browsers (Chrome, Firefox, Safari, Edge)
+- Mobile browsers (iOS Safari, Chrome Mobile)
+- Requires JavaScript enabled
+- Location features require HTTPS (except localhost)
