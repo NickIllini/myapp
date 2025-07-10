@@ -3,13 +3,17 @@ import { MapContainer as LeafletMapContainer, TileLayer, useMapEvents } from 're
 import L from 'leaflet'
 import SearchBox from './SearchBox'
 import LocationMarker from './LocationMarker'
+import TodoList from './TodoList'
 import { useGeolocation } from '../hooks/useGeolocation'
+import { TodoItem } from '../types/todo'
 
 interface MarkerData {
   id: string
   position: [number, number]
   name: string
-  type: 'search' | 'current' | 'custom'
+  type: 'search' | 'current' | 'custom' | 'todo'
+  todoId?: string
+  completed?: boolean
 }
 
 const MapEvents: React.FC<{
@@ -28,18 +32,25 @@ const MapContainer: React.FC = () => {
   const [mapCenter, setMapCenter] = useState<[number, number]>([40.7128, -74.0060]) // New York City default
   const [mapRef, setMapRef] = useState<L.Map | null>(null)
   
+  // Todo state
+  const [todos, setTodos] = useState<TodoItem[]>([])
+  const [todoListVisible, setTodoListVisible] = useState(false)
+  const [pendingTodoId, setPendingTodoId] = useState<string | null>(null)
+  
   const { latitude, longitude, getCurrentPosition, loading: geoLoading, error: geoError } = useGeolocation()
 
-  const addMarker = useCallback((lat: number, lng: number, name: string, type: 'search' | 'current' | 'custom' = 'custom') => {
+  const addMarker = useCallback((lat: number, lng: number, name: string, type: 'search' | 'current' | 'custom' | 'todo' = 'custom', todoId?: string, completed?: boolean) => {
     const newMarker: MarkerData = {
       id: `${Date.now()}-${Math.random()}`,
       position: [lat, lng],
       name,
       type,
+      todoId,
+      completed,
     }
     
-    // Remove existing markers of the same type (except custom)
-    if (type !== 'custom') {
+    // Remove existing markers of the same type (except custom and todo)
+    if (type !== 'custom' && type !== 'todo') {
       setMarkers(prev => prev.filter(marker => marker.type !== type))
     }
     
@@ -55,8 +66,19 @@ const MapContainer: React.FC = () => {
   }, [addMarker, mapRef])
 
   const handleMapClick = useCallback((lat: number, lng: number) => {
-    addMarker(lat, lng, `Custom location (${lat.toFixed(4)}, ${lng.toFixed(4)})`, 'custom')
-  }, [addMarker])
+    if (pendingTodoId) {
+      // Adding location to a todo item
+      setTodos(prev => prev.map(todo => 
+        todo.id === pendingTodoId 
+          ? { ...todo, position: [lat, lng], locationName: `${lat.toFixed(4)}, ${lng.toFixed(4)}` }
+          : todo
+      ))
+      setPendingTodoId(null)
+    } else {
+      // Regular custom marker
+      addMarker(lat, lng, `Custom location (${lat.toFixed(4)}, ${lng.toFixed(4)})`, 'custom')
+    }
+  }, [addMarker, pendingTodoId])
 
   const handleGetCurrentLocation = useCallback(() => {
     getCurrentPosition()
@@ -73,8 +95,73 @@ const MapContainer: React.FC = () => {
     }
   }, [latitude, longitude, addMarker, mapRef])
 
+  // Update todo markers when todos change
+  React.useEffect(() => {
+    // Remove existing todo markers
+    setMarkers(prev => prev.filter(marker => marker.type !== 'todo'))
+    
+    // Add markers for todos with positions
+    todos.forEach(todo => {
+      if (todo.position) {
+        addMarker(
+          todo.position[0], 
+          todo.position[1], 
+          todo.text, 
+          'todo', 
+          todo.id, 
+          todo.completed
+        )
+      }
+    })
+  }, [todos, addMarker])
+
   const clearMarkers = useCallback(() => {
     setMarkers([])
+  }, [])
+
+  // Todo management functions
+  const handleAddTodo = useCallback((text: string) => {
+    const newTodo: TodoItem = {
+      id: `todo-${Date.now()}-${Math.random()}`,
+      text,
+      completed: false,
+      createdAt: new Date(),
+    }
+    setTodos(prev => [...prev, newTodo])
+  }, [])
+
+  const handleToggleTodo = useCallback((id: string) => {
+    setTodos(prev => prev.map(todo => 
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ))
+  }, [])
+
+  const handleDeleteTodo = useCallback((id: string) => {
+    setTodos(prev => prev.filter(todo => todo.id !== id))
+    // Remove associated marker
+    setMarkers(prev => prev.filter(marker => marker.todoId !== id))
+  }, [])
+
+  const handleAddLocationToTodo = useCallback((id: string) => {
+    setPendingTodoId(id)
+  }, [])
+
+  const handleRemoveLocationFromTodo = useCallback((id: string) => {
+    setTodos(prev => prev.map(todo => 
+      todo.id === id ? { ...todo, position: undefined, locationName: undefined } : todo
+    ))
+    // Remove associated marker
+    setMarkers(prev => prev.filter(marker => marker.todoId !== id))
+  }, [])
+
+  const handleSelectTodoLocation = useCallback((todo: TodoItem) => {
+    if (todo.position && mapRef) {
+      mapRef.setView(todo.position, 15)
+    }
+  }, [mapRef])
+
+  const handleToggleTodoVisibility = useCallback(() => {
+    setTodoListVisible(prev => !prev)
   }, [])
 
   return (
@@ -98,11 +185,25 @@ const MapContainer: React.FC = () => {
             position={marker.position}
             name={marker.name}
             type={marker.type}
+            completed={marker.completed}
           />
         ))}
       </LeafletMapContainer>
 
       <SearchBox onLocationFound={handleLocationFound} />
+
+      <TodoList
+        todos={todos}
+        onAddTodo={handleAddTodo}
+        onToggleTodo={handleToggleTodo}
+        onDeleteTodo={handleDeleteTodo}
+        onAddLocationToTodo={handleAddLocationToTodo}
+        onRemoveLocationFromTodo={handleRemoveLocationFromTodo}
+        onSelectTodoLocation={handleSelectTodoLocation}
+        isVisible={todoListVisible}
+        onToggleVisibility={handleToggleTodoVisibility}
+        isAddingLocation={!!pendingTodoId}
+      />
 
       {/* Control panel */}
       <div className="absolute top-4 right-4 z-[1000] space-y-2">
