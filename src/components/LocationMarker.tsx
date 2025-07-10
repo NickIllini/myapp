@@ -13,10 +13,11 @@ L.Icon.Default.mergeOptions({
 interface LocationMarkerProps {
   position: [number, number]
   name: string
-  type?: 'search' | 'current' | 'custom'
+  type?: 'search' | 'current' | 'custom' | 'todo'
+  completed?: boolean
 }
 
-const LocationMarker: React.FC<LocationMarkerProps> = ({ position, name, type = 'custom' }) => {
+const LocationMarker: React.FC<LocationMarkerProps> = ({ position, name, type = 'custom', completed = false }) => {
   const getIcon = () => {
     const iconSize: [number, number] = [25, 41]
     const iconAnchor: [number, number] = [12, 41]
@@ -36,6 +37,15 @@ const LocationMarker: React.FC<LocationMarkerProps> = ({ position, name, type = 
           html: '<div style="background-color: #ef4444; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
           iconSize: [24, 24],
           iconAnchor: [12, 12],
+        })
+      case 'todo':
+        const todoColor = completed ? '#6b7280' : '#8b5cf6' // Gray for completed, purple for active
+        const todoIcon = completed ? '✓' : '📝'
+        return L.divIcon({
+          className: 'custom-marker',
+          html: `<div style="background-color: ${todoColor}; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 12px;">${todoIcon}</div>`,
+          iconSize: [28, 28],
+          iconAnchor: [14, 14],
         })
       default:
         return L.icon({
