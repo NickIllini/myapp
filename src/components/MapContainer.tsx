@@ -278,7 +278,7 @@ const MapContainer: React.FC = () => {
         {/* Todo List Toggle Button */}
         <button
           onClick={handleToggleTodoVisibility}
-          className="block w-12 h-12 bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+          className="block w-12 h-12 bg-blue-500 text-black rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           title="Toggle Todo List"
         >
           <span className="text-lg">📝</span>
@@ -287,28 +287,26 @@ const MapContainer: React.FC = () => {
         {/* Color Library Toggle Button */}
         <button
           onClick={handleToggleColorLibrary}
-          className="block w-12 h-12 bg-purple-500 text-white rounded-lg shadow-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors"
+          className="block w-12 h-12 bg-purple-500 text-black rounded-lg shadow-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors"
           title="Toggle Color Library"
         >
           <span className="text-lg">🎨</span>
         </button>
 
-        {/* Clear Custom Markers Button - only show if there are non-todo markers */}
-        {markers.some(marker => marker.type !== 'todo') && (
-          <button
-            onClick={clearCustomMarkers}
-            className="block w-12 h-12 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors"
-            title="Clear custom markers"
-          >
-            <span className="text-lg">🗑️</span>
-          </button>
-        )}
+        {/* Clear Custom Markers Button */}
+        <button
+          onClick={clearCustomMarkers}
+          className="block w-12 h-12 bg-red-500 text-black rounded-lg shadow-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors"
+          title="Clear custom markers"
+        >
+          <span className="text-lg">🗑️</span>
+        </button>
 
         {/* Get Current Location Button */}
         <button
           onClick={handleGetCurrentLocation}
           disabled={geoLoading}
-          className="block w-12 h-12 bg-green-500 text-white rounded-lg shadow-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="block w-12 h-12 bg-green-500 text-black rounded-lg shadow-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           title="Get current location"
         >
           {geoLoading ? (
