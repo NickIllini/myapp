@@ -15,9 +15,10 @@ interface LocationMarkerProps {
   name: string
   type?: 'search' | 'current' | 'custom' | 'todo'
   completed?: boolean
+  color?: string
 }
 
-const LocationMarker: React.FC<LocationMarkerProps> = ({ position, name, type = 'custom', completed = false }) => {
+const LocationMarker: React.FC<LocationMarkerProps> = ({ position, name, type = 'custom', completed = false, color }) => {
   const getIcon = () => {
     const iconSize: [number, number] = [25, 41]
     const iconAnchor: [number, number] = [12, 41]
@@ -39,11 +40,11 @@ const LocationMarker: React.FC<LocationMarkerProps> = ({ position, name, type = 
           iconAnchor: [12, 12],
         })
       case 'todo':
-        const todoColor = completed ? '#6b7280' : '#8b5cf6' // Gray for completed, purple for active
+        const todoColor = completed ? '#6b7280' : (color || '#8b5cf6') // Use custom color or default purple for active, gray for completed
         const todoIcon = completed ? '✓' : '📝'
         return L.divIcon({
           className: 'custom-marker',
-          html: `<div style="background-color: ${todoColor}; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 12px;">${todoIcon}</div>`,
+          html: `<div style="background-color: ${todoColor}; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 12px; color: white;">${todoIcon}</div>`,
           iconSize: [28, 28],
           iconAnchor: [14, 14],
         })
@@ -69,6 +70,14 @@ const LocationMarker: React.FC<LocationMarkerProps> = ({ position, name, type = 
           <span className="text-gray-600">
             {position[0].toFixed(6)}, {position[1].toFixed(6)}
           </span>
+          {type === 'todo' && color && (
+            <>
+              <br />
+              <span className="text-xs text-gray-500">
+                Color: <span style={{ color }}>{color}</span>
+              </span>
+            </>
+          )}
         </div>
       </Popup>
     </Marker>
