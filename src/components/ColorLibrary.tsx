@@ -78,7 +78,7 @@ export default function ColorLibrary(props: ColorLibraryProps) {
               value={newColorName}
               onChange={(e) => setNewColorName(e.target.value)}
               placeholder="Color name..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-black placeholder:text-gray-500"
             />
             <div className="flex space-x-2">
               <input
@@ -92,7 +92,7 @@ export default function ColorLibrary(props: ColorLibraryProps) {
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
                 placeholder="Category..."
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-black placeholder:text-gray-500"
               />
             </div>
             <button
@@ -109,7 +109,7 @@ export default function ColorLibrary(props: ColorLibraryProps) {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-black"
           >
             {categories.map(category => (
               <option key={category} value={category}>
