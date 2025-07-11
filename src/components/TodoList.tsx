@@ -9,6 +9,8 @@ interface TodoListProps {
   onAddLocationToTodo: (id: string) => void
   onRemoveLocationFromTodo: (id: string) => void
   onSelectTodoLocation: (todo: TodoItem) => void
+  onSelectTodoForColor: (todoId: string) => void
+  onUpdateTodoColor: (todoId: string, color: string, category?: string) => void
   isVisible: boolean
   onToggleVisibility: () => void
   isAddingLocation: boolean
@@ -23,6 +25,8 @@ export default function TodoList(props: TodoListProps) {
     onAddLocationToTodo,
     onRemoveLocationFromTodo,
     onSelectTodoLocation,
+    onSelectTodoForColor,
+    onUpdateTodoColor,
     isVisible,
     onToggleVisibility,
     isAddingLocation,
@@ -43,15 +47,6 @@ export default function TodoList(props: TodoListProps) {
 
   return (
     <>
-      {/* Toggle button */}
-      <button
-        onClick={onToggleVisibility}
-        className="fixed bottom-4 left-4 z-[1001] bg-blue-500 text-white p-3 rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        title="Toggle Todo List"
-      >
-        📝
-      </button>
-
       {/* Todo List Panel */}
       <div className={`fixed top-0 left-0 h-full w-80 bg-white shadow-xl z-[1000] transform transition-transform duration-300 ${
         isVisible ? 'translate-x-0' : '-translate-x-full'
@@ -111,6 +106,8 @@ export default function TodoList(props: TodoListProps) {
                       onAddLocation={onAddLocationToTodo}
                       onRemoveLocation={onRemoveLocationFromTodo}
                       onSelectLocation={onSelectTodoLocation}
+                      onSelectTodoForColor={onSelectTodoForColor}
+                      onUpdateTodoColor={onUpdateTodoColor}
                     />
                   ))}
                 </div>
@@ -131,6 +128,8 @@ export default function TodoList(props: TodoListProps) {
                       onAddLocation={onAddLocationToTodo}
                       onRemoveLocation={onRemoveLocationFromTodo}
                       onSelectLocation={onSelectTodoLocation}
+                      onSelectTodoForColor={onSelectTodoForColor}
+                      onUpdateTodoColor={onUpdateTodoColor}
                     />
                   ))}
                 </div>
@@ -163,6 +162,8 @@ interface TodoItemComponentProps {
   onAddLocation: (id: string) => void
   onRemoveLocation: (id: string) => void
   onSelectLocation: (todo: TodoItem) => void
+  onSelectTodoForColor: (todoId: string) => void
+  onUpdateTodoColor: (todoId: string, color: string, category?: string) => void
 }
 
 function TodoItemComponent(props: TodoItemComponentProps) {
@@ -173,12 +174,32 @@ function TodoItemComponent(props: TodoItemComponentProps) {
     onAddLocation,
     onRemoveLocation,
     onSelectLocation,
+    onSelectTodoForColor,
+    onUpdateTodoColor,
   } = props
+
+  const [showColorPicker, setShowColorPicker] = useState(false)
+
+  const handleColorChange = (color: string) => {
+    onUpdateTodoColor(todo.id, color)
+    setShowColorPicker(false)
+  }
+
+  const quickColors = [
+    '#3B82F6', // Blue
+    '#EF4444', // Red
+    '#10B981', // Green
+    '#F59E0B', // Yellow
+    '#8B5CF6', // Purple
+    '#EC4899', // Pink
+    '#F97316', // Orange
+    '#14B8A6', // Teal
+  ]
 
   return (
     <div className={`p-3 border rounded-lg ${
       todo.completed ? 'bg-gray-50 border-gray-200' : 'bg-white border-gray-300'
-    }`}>
+    }`} style={{ borderLeftColor: todo.color, borderLeftWidth: '4px' }}>
       <div className="flex items-start space-x-3">
         <input
           type="checkbox"
@@ -204,8 +225,45 @@ function TodoItemComponent(props: TodoItemComponentProps) {
               </button>
             </div>
           )}
+          {todo.colorCategory && (
+            <div className="mt-1">
+              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                {todo.colorCategory}
+              </span>
+            </div>
+          )}
         </div>
         <div className="flex items-center space-x-1">
+          {/* Color picker button */}
+          <div className="relative">
+            <button
+              onClick={() => setShowColorPicker(!showColorPicker)}
+              className="w-6 h-6 rounded border-2 border-gray-300 hover:border-gray-500"
+              style={{ backgroundColor: todo.color || '#3B82F6' }}
+              title="Change color"
+            />
+            {showColorPicker && (
+              <div className="absolute right-0 top-8 bg-white border rounded-lg shadow-lg p-2 z-10">
+                <div className="grid grid-cols-4 gap-1 mb-2">
+                  {quickColors.map(color => (
+                    <button
+                      key={color}
+                      onClick={() => handleColorChange(color)}
+                      className="w-6 h-6 rounded border border-gray-300 hover:border-gray-500"
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+                <button
+                  onClick={() => onSelectTodoForColor(todo.id)}
+                  className="w-full text-xs bg-purple-500 text-white px-2 py-1 rounded hover:bg-purple-600"
+                >
+                  More Colors
+                </button>
+              </div>
+            )}
+          </div>
+
           {todo.position ? (
             <button
               onClick={() => onRemoveLocation(todo.id)}
