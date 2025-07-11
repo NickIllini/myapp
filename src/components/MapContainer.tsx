@@ -206,11 +206,21 @@ const MapContainer: React.FC = () => {
       />
 
       {/* Control panel */}
-      <div className="absolute top-4 right-4 z-[1000] space-y-2">
+      <div className="absolute bottom-18 left-4 z-[1000] space-y-2">
+        {markers.length > 0 && (
+          <button
+            onClick={clearMarkers}
+            className="block w-12 h-12 bg-blue-500 rounded-lg shadow-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            title="Clear all markers"
+          >
+            <span className="text-lg">🗑️</span>
+          </button>
+        )}
+
         <button
           onClick={handleGetCurrentLocation}
           disabled={geoLoading}
-          className="block w-12 h-12 bg-white rounded-lg shadow-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="block w-12 h-12 bg-blue-500 rounded-lg shadow-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           title="Get current location"
         >
           {geoLoading ? (
@@ -219,21 +229,11 @@ const MapContainer: React.FC = () => {
             <span className="text-lg">📍</span>
           )}
         </button>
-
-        {markers.length > 0 && (
-          <button
-            onClick={clearMarkers}
-            className="block w-12 h-12 bg-white rounded-lg shadow-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            title="Clear all markers"
-          >
-            <span className="text-lg">🗑️</span>
-          </button>
-        )}
       </div>
 
       {/* Status messages */}
       {geoError && (
-        <div className="absolute bottom-4 left-4 z-[1000] bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg max-w-sm">
+        <div className="absolute bottom-4 left-1/2 z-[1000] transform -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg max-w-sm">
           <strong className="font-bold">Location Error:</strong>
           <span className="block sm:inline"> {geoError}</span>
         </div>

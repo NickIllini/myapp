@@ -48,7 +48,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onLocationFound }) => {
   }
 
   return (
-    <div className="absolute top-4 left-4 z-[1000] w-80">
+    <div className="absolute top-4 left-8 z-[1000] w-80">
       <form onSubmit={handleSubmit} className="search-box rounded-lg p-4 shadow-lg">
         <div className="flex gap-2">
           <input

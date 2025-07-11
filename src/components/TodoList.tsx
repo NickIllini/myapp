@@ -46,7 +46,7 @@ export default function TodoList(props: TodoListProps) {
       {/* Toggle button */}
       <button
         onClick={onToggleVisibility}
-        className="fixed top-4 left-4 z-[1001] bg-blue-500 text-white p-3 rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="fixed bottom-4 left-4 z-[1001] bg-blue-500 text-white p-3 rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         title="Toggle Todo List"
       >
         📝
@@ -149,7 +149,6 @@ export default function TodoList(props: TodoListProps) {
       {/* Overlay when visible */}
       {isVisible && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-25 z-[999]"
           onClick={onToggleVisibility}
         />
       )}
